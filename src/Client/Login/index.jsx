@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import './index.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
-// eslint-disable-next-line react/prop-types
-const Login = ({ onLogin }) => {
+const Login = (props) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
-  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate(); 
+  
+
+  // eslint-disable-next-line react/prop-types
+  const {onLogin} = props
 
   const handleChange = (e) => {
     setFormData({
@@ -36,26 +38,40 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (validate()) {
-      try {
-        const response = await axios.post('http://localhost:3000/login', formData);
-        if (response.data.message === 'Login successful') {
-          setLoggedIn(true);
-          onLogin(); 
-          await navigate('/welcome');
-        } else {
-          console.error('Login failed:', response.data.message);
+        try {
+          const response = await axios.post('http://localhost:3002/login', formData);  
+          console.log(response)
+             
+            if (response.status === 200) {
+                setFormData({ email: '', password: '' });
+                onLogin(true)
+                navigate('/');
+            } else {
+                setLoginError(`Login failed: ${response.data.message}`);
+            }
+        } catch (error) {  
+            console.log(error)
+            if (error.response) {
+              
+                setLoginError(`Error: ${error.response.data.message}`);
+            } else if (error.request) {
+             
+                setLoginError('No response received from server. Please check if the server is running.');
+            } else {
+                
+                setLoginError('Error during login: ' + error.message);
+            }
+            console.error('Error during login:', error);
         }
-      } catch (error) {
-        console.error('Error during login:', error);
-      }
     }
-  };
+};
+
 
   return (
     <div className="App">
       <h2 className="heading">Login Page</h2>
-      {loggedIn && <p className="success-message">Login successful!</p>}
       <form onSubmit={handleSubmit} className="login-form">
         <div className="label">
           <label>Email:</label>
@@ -81,7 +97,9 @@ const Login = ({ onLogin }) => {
           />
           {errors.password && <p className="error-message">{errors.password}</p>}
         </div>
-        <button type="submit" className="button">Login</button>
+        <button type="submit" className="button">Login</button> 
+       
+        {loginError && <p className="error-message">{loginError}</p>}
         <p className="option">Don not have an account? <Link to="/register">Register</Link></p>
       </form>
     </div>

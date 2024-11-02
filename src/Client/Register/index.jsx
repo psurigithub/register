@@ -53,14 +53,12 @@ const handleRegistrationSuccess = () =>{
       navigate('/login')
   }
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       console.log('Registration successful:', formData);
       setSubmitted(true);  
-       await axios.post('http://localhost:3000/register', formData)
+       await axios.post('http://localhost:3002/register', formData)
       .then(handleRegistrationSuccess())
       .catch(error => console.error('Registration error:', error)); 
 

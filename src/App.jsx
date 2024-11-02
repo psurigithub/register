@@ -9,18 +9,18 @@ import Welcome from './Client/Welcome';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleLogin = () => setIsLoggedIn(true);
+  
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/login"
-          element={<Login onLogin={handleLogin} />}
+          element={<Login onLogin={setIsLoggedIn} />}
         />
         <Route path="/register" element={<RegistrationForm />} />
         <Route
-          path="/welcome"
+          path="/"
           element={isLoggedIn ? <Welcome /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<NotFound />} />

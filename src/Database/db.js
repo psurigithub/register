@@ -1,6 +1,7 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb'; 
 
-const uri = "mongodb://127.0.0.1:27017";
+
+const uri = "mongodb+srv://suribabuparepalli03:tVCf2qUOvywbgxjv@cluster0.kqhin.mongodb.net/";
 let employees;
 
 async function ConnectDb() {
@@ -17,8 +18,8 @@ async function ConnectDb() {
 
 async function UploadData(data) {
     try {
-        if (!employees) await ConnectDb(); 
-        const result = await employees.insertOne(data);
+        if (!employees) await ConnectDb();
+        const result = await employees.insertOne(data); 
         return result;
     } catch (error) {
         console.error("Error inserting data:", error);
