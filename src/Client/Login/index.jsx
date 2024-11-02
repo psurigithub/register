@@ -14,7 +14,9 @@ const Login = (props) => {
   const {onLogin} = props
 
   const handleChange = (e) => {
-    setFormData({
+    setFormData({ 
+
+      
       ...formData,
       [e.target.name]: e.target.value,
     });
